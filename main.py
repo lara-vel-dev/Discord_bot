@@ -12,6 +12,11 @@ TOKEN: Final[str] = os.getenv("DISCORD_TOKEN")
 # Command identifier
 bot = commands.Bot(command_prefix='!', intents=Intents.all())
 
+# When the bot is ready to use
+@bot.event
+async def on_ready():
+    print("I'm ready!!")
+
 
 # --- Basic commands --- #
 
@@ -19,6 +24,12 @@ bot = commands.Bot(command_prefix='!', intents=Intents.all())
 @bot.command()
 async def greetings(ctx):
     await ctx.send("Hello there!")
+
+
+# Farewell the user
+@bot.command()
+async def farewell(ctx):
+    await ctx.send("See you soon!")
 
 
 # Init Bot
