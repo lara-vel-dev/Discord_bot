@@ -40,14 +40,17 @@ async def on_member_join(member: Member):
     backgroung.ellipse((380, 155), 290, 290, outline="white", stroke_width=5)
 
     file = File(fp=backgroung.image_bytes, filename="1.png")
-    await channel.send(f"Hello {member.mention}! Welcome to Danielandia")
+    await channel.send(f"Hola {member.mention}! Bienvenidx a Danielandia")
     await channel.send(file=file)
 
 # Sends message when a user leaves the server
 @bot.event
-async def on_member_remove(member):
+async def on_member_remove(member: Member):
     channel = bot.get_channel(GOODBYE_ID)
-    await channel.send("Goodbye!")
+    backgroung = Editor("sad-g.png")
+    file = File(fp=backgroung.image_bytes, filename="sad-g.png")
+    await channel.send(f"{member.name} es una pena que te vayas :(")
+    await channel.send(file=file)
 
 # --- Basic commands --- #
 
