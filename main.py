@@ -1,5 +1,6 @@
 # Modules
 import os
+import random
 from discord import Intents, Member, File
 from discord.ext import commands
 from dotenv import load_dotenv
@@ -18,12 +19,16 @@ GOODBYE_ID: Final[int] = int(os.getenv("FAREWELL_CHANNEL_ID"))
 # Command identifier
 bot = commands.Bot(command_prefix='!', intents=Intents.all())
 
+# Deletes default command "help"
+bot.remove_command('help')
+
 # --- Bot events --- #
 
 # When the bot is ready to use
 @bot.event
 async def on_ready():
     print("I'm ready!!")
+
 
 # Sends message when a user joins the server
 @bot.event
@@ -43,6 +48,7 @@ async def on_member_join(member: Member):
     await channel.send(f"Hola {member.mention}! Bienvenidx a Danielandia")
     await channel.send(file=file)
 
+
 # Sends message when a user leaves the server
 @bot.event
 async def on_member_remove(member: Member):
@@ -52,18 +58,59 @@ async def on_member_remove(member: Member):
     await channel.send(f"{member.name} es una pena que te vayas :(")
     await channel.send(file=file)
 
+
 # --- Basic commands --- #
 
 # Greet the users
 @bot.command()
 async def greetings(ctx):
-    await ctx.send("Hello there!")
+    await ctx.send("¡Hola! :D")
 
 
 # Farewell the user
 @bot.command()
 async def farewell(ctx):
-    await ctx.send("See you soon!")
+    await ctx.send("¡Nos vemos pronto! :)")
+
+
+# Help (Shows all commands)
+@bot.command()
+async def help(ctx):
+    pass
+
+
+# Bot joins a voice channel
+@bot.command()
+async def join(ctx):
+    if ctx.author.voice:
+        channel = ctx.message.author.voice.channel
+        await channel.connect()
+    else:
+        await ctx.send("Necesitas estar conectado en un canal de voz")
+
+
+# Bot leaves a voice channel
+@bot.command()
+async def leave(ctx):
+    if ctx.voice_client:
+        await ctx.guild.voice_client.disconnect()
+        await ctx.send("Ya me voy pues :(")
+    else:
+        ctx.send("No estoy en un canal de voz xd")
+
+
+# Add roles
+@bot.command()
+async def roles(ctx):
+    pass
+
+
+# Game ball-8
+@bot.command()
+async def ball8(ctx, question):
+    answers = ["Obvio microbio", "Tsss se me hace que no", "Pue que si, pue que no"]
+    answer = random.choice(answers)
+    await ctx.send(answer)
 
 
 if __name__ == "__main__":
