@@ -58,7 +58,7 @@ async def on_member_remove(member: Member):
     channel = bot.get_channel(GOODBYE_ID)
     backgroung = Editor("sad-g.png")
     file = File(fp=backgroung.image_bytes, filename="sad-g.png")
-    await channel.send(f"{member.name} es una pena que te vayas :(")
+    await channel.send(f"{member.mention} es una pena que te vayas :(")
     await channel.send(file=file)
 
 
@@ -79,6 +79,8 @@ async def on_raw_reaction_add(payload):
             roles_to_remove = tuple(utils.get(guild.roles, name=n)
                                     for n in role_names)
             emojis = ('🛠️', '📱', '📊')
+
+            await member.add_roles(role)
             await member.remove_roles(*roles_to_remove)
             for e in emojis:
                 await message.remove_reaction(e, member)
@@ -90,6 +92,7 @@ async def on_raw_reaction_add(payload):
                                     for n in role_names)
             emojis = ('🎨', '📱', '📊')
 
+            await member.add_roles(role)
             await member.remove_roles(*roles_to_remove)
             for e in emojis:
                 await message.remove_reaction(e, member)
@@ -101,6 +104,7 @@ async def on_raw_reaction_add(payload):
                                     for n in role_names)
             emojis = ('🎨', '📊', '🛠️')
 
+            await member.add_roles(role)
             await member.remove_roles(*roles_to_remove)
             for e in emojis:
                 await message.remove_reaction(e, member)
@@ -112,11 +116,12 @@ async def on_raw_reaction_add(payload):
                                     for n in role_names)
             emojis = ('🎨', '📱', '🛠️')
 
+            await member.add_roles(role)
             await member.remove_roles(*roles_to_remove)
             for e in emojis:
                 await message.remove_reaction(e, member)
 
-        await member.add_roles(role)
+        
 
 
 # Adds role to user
