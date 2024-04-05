@@ -26,6 +26,8 @@ bot.remove_command('help')
 # --- Bot events --- #
 
 # When the bot is ready to use
+
+
 @bot.event
 async def on_ready():
     print("I'm ready!!")
@@ -160,7 +162,17 @@ async def farewell(ctx):
 # Help (Shows all commands)
 @bot.command()
 async def help(ctx):
-    pass
+    embed = Embed(title="Comandos básicos",
+                  description="Estos son los comandos que puedes utilizar:\n" +
+                  "!greetings: el bot te saluda\n" +
+                  "!farewell: el bot se despide\n" +
+                  "!join: el bot se une a un canal de voz\n" +
+                  "!leave: el bot se va del canal de voz\n" +
+                  "!ball8: juego de preguntas de si/no",
+                  color=0x0091CF
+                  )
+
+    msg = await ctx.send(embed=embed)
 
 
 # Bot joins a voice channel
