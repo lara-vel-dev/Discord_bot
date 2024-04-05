@@ -192,7 +192,7 @@ async def leave(ctx):
         await ctx.guild.voice_client.disconnect()
         await ctx.send("Ya me voy pues :(")
     else:
-        ctx.send("No estoy en un canal de voz xd")
+        await ctx.send("No estoy en un canal de voz xd")
 
 
 # Add roles
