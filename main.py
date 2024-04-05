@@ -26,8 +26,6 @@ bot.remove_command('help')
 # --- Bot events --- #
 
 # When the bot is ready to use
-
-
 @bot.event
 async def on_ready():
     print("I'm ready!!")
@@ -129,20 +127,21 @@ async def on_raw_reaction_remove(payload):
 
         if emoji == '🎨':
             role = utils.get(guild.roles, name="Frontend-dev")
-            
+
         elif emoji == '🛠️':
             role = utils.get(guild.roles, name="Backend-dev")
-            
+
         elif emoji == '📱':
             role = utils.get(guild.roles, name="Mobile-dev")
-            
+
         elif emoji == '📊':
             role = utils.get(guild.roles, name="Data-analyst")
-        
-        member = await(guild.fetch_member(payload.user_id))
+
+        member = await (guild.fetch_member(payload.user_id))
 
         if member is not None:
             await member.remove_roles(role)
+
 
 # --- Basic commands --- #
 
@@ -205,7 +204,7 @@ async def roles(ctx):
 @bot.command()
 async def ball8(ctx, question):
     answers = ["Obvio microbio", "Tsss se me hace que no",
-               "Pue que si, pue que no"]
+               "Pue que si, pue que no", "Chance", "Sepa manix"]
     answer = random.choice(answers)
     await ctx.send(answer)
 
