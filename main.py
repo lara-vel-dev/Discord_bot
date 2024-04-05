@@ -26,6 +26,8 @@ bot.remove_command('help')
 # --- Bot events --- #
 
 # When the bot is ready to use
+
+
 @bot.event
 async def on_ready():
     print("I'm ready!!")
@@ -63,23 +65,84 @@ async def on_member_remove(member: Member):
 # Adds role to user
 @bot.event
 async def on_raw_reaction_add(payload):
-    message = MESSAGE
-    
-    if message == payload.message_id:
-        member = payload.member
+    # Fetch message
+    message = await bot.get_channel(payload.channel_id).fetch_message(payload.message_id)
+
+    if message.id == MESSAGE:
+        member: Member = payload.member
         guild = member.guild
         emoji = payload.emoji.name
 
         if emoji == '🎨':
             role = utils.get(guild.roles, name="Frontend-dev")
+            role_names = ("Backend-dev", "Mobile-dev", "Data-analyst")
+            roles_to_remove = tuple(utils.get(guild.roles, name=n)
+                                    for n in role_names)
+            emojis = ('🛠️', '📱', '📊')
+            await member.remove_roles(*roles_to_remove)
+            for e in emojis:
+                await message.remove_reaction(e, member)
+
         elif emoji == '🛠️':
             role = utils.get(guild.roles, name="Backend-dev")
+            role_names = ("Frontend-dev", "Mobile-dev", "Data-analyst")
+            roles_to_remove = tuple(utils.get(guild.roles, name=n)
+                                    for n in role_names)
+            emojis = ('🎨', '📱', '📊')
+
+            await member.remove_roles(*roles_to_remove)
+            for e in emojis:
+                await message.remove_reaction(e, member)
+
         elif emoji == '📱':
             role = utils.get(guild.roles, name="Mobile-dev")
+            role_names = ("Frontend-dev", "Backend-dev", "Data-analyst")
+            roles_to_remove = tuple(utils.get(guild.roles, name=n)
+                                    for n in role_names)
+            emojis = ('🎨', '📊', '🛠️')
+
+            await member.remove_roles(*roles_to_remove)
+            for e in emojis:
+                await message.remove_reaction(e, member)
+
+        elif emoji == '📊':
+            role = utils.get(guild.roles, name="Data-analyst")
+            role_names = ("Frontend-dev", "Backend-dev", "Mobile-dev")
+            roles_to_remove = tuple(utils.get(guild.roles, name=n)
+                                    for n in role_names)
+            emojis = ('🎨', '📱', '🛠️')
+
+            await member.remove_roles(*roles_to_remove)
+            for e in emojis:
+                await message.remove_reaction(e, member)
+
+        await member.add_roles(role)
+
+
+# Adds role to user
+@bot.event
+async def on_raw_reaction_remove(payload):
+
+    if MESSAGE == payload.message_id:
+        guild = await (bot.fetch_guild(payload.guild_id))
+        emoji = payload.emoji.name
+
+        if emoji == '🎨':
+            role = utils.get(guild.roles, name="Frontend-dev")
+            
+        elif emoji == '🛠️':
+            role = utils.get(guild.roles, name="Backend-dev")
+            
+        elif emoji == '📱':
+            role = utils.get(guild.roles, name="Mobile-dev")
+            
         elif emoji == '📊':
             role = utils.get(guild.roles, name="Data-analyst")
         
-        await member.add_roles(role)
+        member = await(guild.fetch_member(payload.user_id))
+
+        if member is not None:
+            await member.remove_roles(role)
 
 # --- Basic commands --- #
 
@@ -126,10 +189,10 @@ async def leave(ctx):
 async def roles(ctx):
     # Create embed link
     embed = Embed(title="Sistema de roles",
-        description="¡Hola 👋!\n¿En qué área te desenvuelves más?\n(Selecciona 1)" +
-        "\n🎨 Frontend\n🛠️ Backend\n📱 Móvil\n📊 Ciencia de datos",
-        color=0x0091CF
-    )
+                  description="¡Hola 👋!\n¿En qué área te desenvuelves más?\n(Selecciona 1)" +
+                  "\n🎨 Frontend\n🛠️ Backend\n📱 Móvil\n📊 Ciencia de datos",
+                  color=0x0091CF
+                  )
 
     msg = await ctx.send(embed=embed)
     await msg.add_reaction('🎨')
@@ -141,7 +204,8 @@ async def roles(ctx):
 # Game ball-8
 @bot.command()
 async def ball8(ctx, question):
-    answers = ["Obvio microbio", "Tsss se me hace que no", "Pue que si, pue que no"]
+    answers = ["Obvio microbio", "Tsss se me hace que no",
+               "Pue que si, pue que no"]
     answer = random.choice(answers)
     await ctx.send(answer)
 
