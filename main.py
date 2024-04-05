@@ -1,7 +1,7 @@
 # Modules
 import os
 import random
-from discord import Intents, Member, File
+from discord import Intents, Member, File, Embed, utils
 from discord.ext import commands
 from dotenv import load_dotenv
 from easy_pil import Editor, load_image_async, Font
@@ -15,6 +15,7 @@ TOKEN: Final[str] = os.getenv("DISCORD_TOKEN")
 # Import id's
 WELCOME_ID: Final[int] = int(os.getenv("WELCOME_CHANNEL_ID"))
 GOODBYE_ID: Final[int] = int(os.getenv("FAREWELL_CHANNEL_ID"))
+MESSAGE: Final[int] = int(os.getenv("MESSAGE_ID"))
 
 # Command identifier
 bot = commands.Bot(command_prefix='!', intents=Intents.all())
@@ -59,6 +60,27 @@ async def on_member_remove(member: Member):
     await channel.send(file=file)
 
 
+# Adds role to user
+@bot.event
+async def on_raw_reaction_add(payload):
+    message = MESSAGE
+    
+    if message == payload.message_id:
+        member = payload.member
+        guild = member.guild
+        emoji = payload.emoji.name
+
+        if emoji == '🎨':
+            role = utils.get(guild.roles, name="Frontend-dev")
+        elif emoji == '🛠️':
+            role = utils.get(guild.roles, name="Backend-dev")
+        elif emoji == '📱':
+            role = utils.get(guild.roles, name="Mobile-dev")
+        elif emoji == '📊':
+            role = utils.get(guild.roles, name="Data-analyst")
+        
+        await member.add_roles(role)
+
 # --- Basic commands --- #
 
 # Greet the users
@@ -102,7 +124,18 @@ async def leave(ctx):
 # Add roles
 @bot.command()
 async def roles(ctx):
-    pass
+    # Create embed link
+    embed = Embed(title="Sistema de roles",
+        description="¡Hola 👋!\n¿En qué área te desenvuelves más?\n(Selecciona 1)" +
+        "\n🎨 Frontend\n🛠️ Backend\n📱 Móvil\n📊 Ciencia de datos",
+        color=0x0091CF
+    )
+
+    msg = await ctx.send(embed=embed)
+    await msg.add_reaction('🎨')
+    await msg.add_reaction('🛠️')
+    await msg.add_reaction('📱')
+    await msg.add_reaction('📊')
 
 
 # Game ball-8
